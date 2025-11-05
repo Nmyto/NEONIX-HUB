@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bowling - Offline Fun</title>
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(#b5895e, #7b522b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+    }
+    h1 {
+      color: white;
+      margin: 10px;
+      text-shadow: 1px 1px 3px #000;
+    }
+    #score {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+    canvas {
+      background: url('https://upload.wikimedia.org/wikipedia/commons/6/61/Bowling_Lane.jpg') center/cover;
+      border: 3px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #222;
+    }
+    #buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    button, a {
+      background: #ff6b00;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover, a:hover {
+      background: #d85b00;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎳 Bowling Game</h1>
+  <div id="score">Pins knocked: 0</div>
+  <canvas id="gameCanvas" width="420" height="520"></canvas>
+
+  <div id="buttons">
+    <button onclick="resetGame()">Restart</button>
+    <a href="index.html">← Back</a>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreText = document.getElementById("score");
+
+    let ball = { x: 210, y: 460, r: 15, dy: 0, moving: false };
+    let moveDir = 0;
+    let pins = [];
+    let pinsDown = 0;
+
+    // Create triangle of pins
+    function resetPins() {
+      pins = [];
+      const startX = 180;
+      const startY = 60;
+      const gap = 25;
+      let count = 0;
+      for (let row = 0; row < 4; row++) {
+        for (let i = 0; i <= row; i++) {
+          pins.push({
+            x: startX - row * 12 + i * gap,
+            y: startY + row * gap,
+            hit: false
+          });
+          count++;
+        }
+      }
+      pinsDown = 0;
+      scoreText.textContent = "Pins knocked: 0";
+    }
+
+    function drawPins() {
+      for (let pin of pins) {
+        ctx.beginPath();
+        ctx.arc(pin.x, pin.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = pin.hit ? "gray" : "white";
+        ctx.fill();
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    function drawBall() {
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fillStyle = "#2222ff";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawPins();
+      drawBall();
+
+      if (ball.moving) {
+        ball.y -= 5;
+        for (let pin of pins) {
+          const dx = pin.x - ball.x;
+          const dy = pin.y - ball.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < ball.r + 8 && !pin.hit) {
+            pin.hit = true;
+            pinsDown++;
+            scoreText.textContent = "Pins knocked: " + pinsDown;
+          }
+        }
+        if (ball.y < 20) ball.moving = false;
+      } else {
+        ball.x += moveDir * 4;
+        if (ball.x < ball.r) ball.x = ball.r;
+        if (ball.x > canvas.width - ball.r) ball.x = canvas.width - ball.r;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // Keyboard controls
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") moveDir = -1;
+      if (e.key === "ArrowRight") moveDir = 1;
+      if (e.key === "ArrowUp" && !ball.moving) ball.moving = true;
+    });
+    document.addEventListener("keyup", e => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") moveDir = 0;
+    });
+
+    // Mobile controls (tap to move or throw)
+    let touchStartTime = 0;
+    canvas.addEventListener("touchstart", e => {
+      touchStartTime = Date.now();
+    });
+    canvas.addEventListener("touchend", e => {
+      const duration = Date.now() - touchStartTime;
+      if (duration < 200) {
+        moveDir = moveDir === 0 ? 1 : 0;
+      } else {
+        ball.moving = true;
+      }
+    });
+
+    function resetGame() {
+      ball.x = 210;
+      ball.y = 460;
+      ball.moving = false;
+      moveDir = 0;
+      resetPins();
+    }
+
+    resetPins();
+    update();
+  </script>
+</body>
+</html>

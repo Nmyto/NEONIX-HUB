@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Fun – Play Offline Games</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f4f5f8;
+      color: #333;
+    }
+    header {
+      background: #334e8c;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.4rem;
+    }
+    nav {
+      text-align: center;
+      margin: 20px 0;
+    }
+    nav a {
+      margin: 0 10px;
+      color: #334e8c;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .games-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 0 20px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .game-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .game-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
+    .game-card .info {
+      padding: 15px;
+      text-align: center;
+    }
+    .game-card .info h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      color: #334e8c;
+    }
+    .game-card .info button {
+      background: #334e8c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .game-card .info button:hover {
+      background: #273f6a;
+    }
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      background: #e9ebf0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Offline Fun</h1>
+    <p>Play offline games anytime, no internet required</p>
+  </header>
+
+  <nav>
+    <a href="#driving">Driving</a>
+    <a href="#sports">Sports</a>
+    <a href="#puzzles">Tic Tac Toe</a>
+    <a href="#math">Math</a>
+    <a href="#languages">Languages</a>
+  </nav>
+
+  <section id="driving" class="games-container">
+    <div class="game-card">
+     
+      <div class="info">
+        <h3>Arcade Racer</h3>
+        <button onclick="location.href='arcade-racer.html'">Play</button>
+      </div>
+    </div>
+    <!-- you can add more driving cards here -->
+  </section>
+
+  <section id="sports" class="games-container">
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Football Stars</h3>
+        <button onclick="location.href='football.html'">Play</button>
+      </div>
+    </div>
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Basketball Dunk</h3>
+        <button onclick="location.href='basketball.html'">Play</button>
+      </div>
+    </div>
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Bowling Strike</h3>
+        <button onclick="location.href='bowling.html'">Play</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="puzzles" class="games-container">
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Tic Tac Toe</h3>
+        <button onclick="location.href='tictactoe.html'">Play</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="math" class="games-container">
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Math Challenge</h3>
+        <button onclick="location.href='math-game.html'">Play</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="languages" class="games-container">
+    <div class="game-card">
+      
+      <div class="info">
+        <h3>Learn a Language</h3>
+        <button onclick="location.href='language-learn.html'">Start</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Made by: Nard Morina, Engjëll Musa, Lis Beqiri, Rubin Osmani, Aneta Dubova and Diell Sinanaj
+  </footer>
+</body>
+</html>

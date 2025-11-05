@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Basketball — Offline Fun</title>
+<style>
+  body{margin:0;display:flex;flex-direction:column;align-items:center;font-family:Arial;background:linear-gradient(#87CEEB,#fff);height:100vh;overflow:hidden}
+  header{margin-top:10px}
+  h1{color:#ff6b00;margin:6px}
+  #info{display:flex;gap:10px;margin-bottom:6px}
+  button,a{background:#ff6b00;color:#fff;border:none;padding:8px 12px;border-radius:8px;text-decoration:none}
+  canvas{border-radius:12px;background:#2f8f3f;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
+  #score{margin:6px;color:#222;font-weight:600}
+  .hint{font-size:12px;color:#333;margin-top:6px}
+</style>
+</head>
+<body>
+  <header><h1>🏀 Basketball</h1></header>
+  <div id="score">Score: 0</div>
+  <canvas id="c" width="480" height="600"></canvas>
+  <div id="info">
+    <button onclick="resetGame()">Restart</button>
+    <a href="index.html">← Back</a>
+  </div>
+  <div class="hint">Controls: ← → to move, ↑ to shoot. On desktop/mobile: click/touch & drag to aim, release to shoot.</div>
+
+<script>
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+
+const groundY = canvas.height - 80;
+let score = 0;
+
+// ball state
+let ball = { x: canvas.width/2, y: groundY, r: 18, vx:0, vy:0, moving:false };
+
+// hoop
+const hoop = { x: canvas.width/2 - 70, y: 100, w: 140, h: 10 };
+
+// aiming state
+let aiming = false;
+let aimStart = null; // {x,y}
+let aimPos = null;
+let moveDir = 0; // -1 left, 1 right
+
+const gravity = 0.45;
+const maxPower = 28;
+
+// draw
+function drawHoop(){
+  ctx.fillStyle = '#b4372f';
+  ctx.fillRect(hoop.x, hoop.y, hoop.w, hoop.h);
+  ctx.beginPath();
+  ctx.arc(hoop.x + hoop.w/2, hoop.y + 6, hoop.w/2, 0, Math.PI);
+  ctx.lineWidth = 3; ctx.strokeStyle = '#b4372f'; ctx.stroke();
+}
+
+function drawBall(){
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
+  ctx.fillStyle = '#ff6b00'; ctx.fill();
+  ctx.lineWidth = 2; ctx.strokeStyle = '#222'; ctx.stroke();
+}
+
+// aim indicator (line + power circle)
+function drawAim(){
+  if(!aiming || !aimStart || !aimPos) return;
+  ctx.beginPath();
+  ctx.moveTo(ball.x, ball.y);
+  ctx.lineTo(aimPos.x, aimPos.y);
+  ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.stroke();
+  // power circle
+  const dx = aimStart.x - aimPos.x, dy = aimStart.y - aimPos.y;
+  const power = Math.min(maxPower, Math.hypot(dx,dy)/6);
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, 8 + power, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,107,0,0.12)'; ctx.fill();
+}
+
+function update(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // ground line
+  ctx.fillStyle = '#4b7b2f'; ctx.fillRect(0, groundY+ball.r, canvas.width, canvas.height-groundY);
+
+  drawHoop();
+  drawPins = false;
+  drawBall();
+  drawAim();
+
+  // Move left/right when not shooting
+  if(!ball.moving){
+    ball.x += moveDir * 5;
+    if(ball.x < ball.r) ball.x = ball.r;
+    if(ball.x > canvas.width - ball.r) ball.x = canvas.width - ball.r;
+  } else {
+    // physics
+    ball.vy += gravity;
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    // rim/collision floor
+    if(ball.y + ball.r > groundY + ball.r){
+      // landed
+      ball.moving = false;
+      ball.y = groundY;
+      ball.vx = ball.vy = 0;
+    }
+
+    // scoring: passes through hoop area while moving downward
+    if(ball.y - ball.vy < hoop.y + hoop.h && ball.y >= hoop.y && ball.x > hoop.x && ball.x < hoop.x + hoop.w && ball.vy > 0){
+      score++;
+      scoreEl.textContent = 'Score: ' + score;
+      ball.moving = false;
+      ball.y = groundY;
+      ball.vx = ball.vy = 0;
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+// controls: keyboard
+window.addEventListener('keydown', e=>{
+  if(e.key === 'ArrowLeft') moveDir = -1;
+  if(e.key === 'ArrowRight') moveDir = 1;
+  if(e.key === 'ArrowUp' && !ball.moving){
+    // small standard shot
+    ball.vx = 0; ball.vy = -13; ball.moving = true;
+  }
+});
+window.addEventListener('keyup', e=>{
+  if((e.key==='ArrowLeft' && moveDir===-1) || (e.key==='ArrowRight' && moveDir===1)) moveDir = 0;
+});
+
+// mouse: click & drag to aim
+canvas.addEventListener('pointerdown', e=>{
+  // prevent text selection and such
+  e.preventDefault();
+  if(ball.moving) return;
+  aiming = true;
+  const r = canvas.getBoundingClientRect();
+  aimStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+  aimPos = { ...aimStart };
+});
+canvas.addEventListener('pointermove', e=>{
+  if(!aiming) return;
+  const r = canvas.getBoundingClientRect();
+  aimPos = { x: e.clientX - r.left, y: e.clientY - r.top };
+});
+canvas.addEventListener('pointerup', e=>{
+  if(!aiming) return;
+  aiming = false;
+  // compute shot vector from ball to aimPos (drag direction: start->current)
+  const r = canvas.getBoundingClientRect();
+  const release = { x: e.clientX - r.left, y: e.clientY - r.top };
+  // power = distance between start and release
+  const dx = aimStart.x - release.x;
+  const dy = aimStart.y - release.y;
+  let power = Math.hypot(dx,dy)/6;
+  if(power < 6) power = 6; // min power
+  if(power > maxPower) power = maxPower;
+  // direction: normalized dx,dy
+  const nx = dx/Math.hypot(dx,dy);
+  const ny = dy/Math.hypot(dx,dy);
+  // assign velocities: vx = nx*power, vy = -ny*power  (note we inverted Y earlier)
+  ball.vx = nx * power;
+  ball.vy = -ny * power;
+  ball.moving = true;
+  aimStart = aimPos = null;
+});
+
+// touch fallback: pointer events cover mobile
+canvas.addEventListener('pointercancel', ()=>{ aiming=false; aimStart=aimPos=null });
+
+// reset
+function resetGame(){
+  ball.x = canvas.width/2; ball.y = groundY; ball.vx=0; ball.vy=0; ball.moving=false; score=0;
+  scoreEl.textContent = 'Score: 0';
+}
+
+// init
+resetGame();
+update();
+</script>
+</body>
+</html>
