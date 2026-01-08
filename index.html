@@ -1,172 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Offline Fun – Play Offline Games</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #f4f5f8;
-      color: #333;
-    }
-    header {
-      background: #334e8c;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.4rem;
-    }
-    nav {
-      text-align: center;
-      margin: 20px 0;
-    }
-    nav a {
-      margin: 0 10px;
-      color: #334e8c;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-    .games-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 0 20px 40px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .game-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .game-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    .game-card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-    }
-    .game-card .info {
-      padding: 15px;
-      text-align: center;
-    }
-    .game-card .info h3 {
-      margin: 0 0 10px;
-      font-size: 1.2rem;
-      color: #334e8c;
-    }
-    .game-card .info button {
-      background: #334e8c;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: background 0.2s;
-    }
-    .game-card .info button:hover {
-      background: #273f6a;
-    }
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      background: #e9ebf0;
-      color: #666;
-      font-size: 0.9rem;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>NEONIX HUB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma,sans-serif}
+
+body{
+    background:radial-gradient(circle at top right,#1c1500,#000);
+    color:white;
+    min-height:100vh;
+}
+
+/* NAVBAR */
+.navbar{
+    height:70px;
+    background:linear-gradient(90deg,#d4af37,#8b6f1f);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+}
+.navbar h1,.navbar a{color:black;font-weight:800;text-decoration:none}
+
+/* HERO */
+.hero{text-align:center;padding:60px 8%}
+.hero h2{
+    font-size:64px;
+    color:#d4af37;
+    text-shadow:0 0 20px rgba(212,175,55,.5)
+}
+.hero p{color:#bbb}
+
+/* INFO */
+.info{
+    text-align:center;
+    color:#d4af37;
+    font-weight:600;
+}
+
+/* KEY */
+.key-box{
+    max-width:420px;
+    margin:30px auto;
+    padding:25px;
+    border-radius:16px;
+    background:rgba(255,215,0,.06);
+    border:1px solid rgba(212,175,55,.35);
+}
+.key-box input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    background:#111;
+    border:none;
+    color:white;
+    margin-bottom:12px;
+}
+.key-box button{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#d4af37;
+    color:black;
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* SEARCH */
+.search{
+    display:none;
+    max-width:400px;
+    margin:30px auto;
+}
+.search input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #d4af37;
+    background:#000;
+    color:white;
+}
+
+/* CATEGORIES */
+.categories{
+    display:none;
+    justify-content:center;
+    gap:12px;
+    margin-top:20px;
+}
+.cat-btn{
+    padding:10px 18px;
+    border-radius:10px;
+    background:#111;
+    border:1px solid #d4af37;
+    color:#d4af37;
+    cursor:pointer;
+}
+.cat-btn:hover{background:#d4af37;color:black}
+
+/* SCRIPTS */
+.scripts{display:none;margin-top:20px}
+.script-card{
+    max-width:760px;
+    margin:18px auto;
+    padding:20px;
+    border-radius:16px;
+    background:rgba(255,215,0,.05);
+    border:1px solid rgba(212,175,55,.3);
+}
+.script-card h4{color:#d4af37}
+.script-card p{color:#bbb;font-size:14px}
+.script-card pre{
+    background:#000;
+    padding:15px;
+    border-radius:10px;
+    color:#aaa;
+    overflow-x:auto;
+}
+.script-card button{
+    margin-top:10px;
+    padding:10px 18px;
+    border-radius:10px;
+    background:#d4af37;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* DISCORD */
+.discord{
+    display:block;
+    margin:40px auto;
+    padding:14px 30px;
+    border-radius:12px;
+    background:#111;
+    border:1px solid #d4af37;
+    color:#d4af37;
+    font-weight:700;
+    cursor:pointer;
+}
+.discord:hover{background:#d4af37;color:black}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>Offline Fun</h1>
-    <p>Play offline games anytime, no internet required</p>
-  </header>
 
-  <nav>
-    <a href="#driving">Driving</a>
-    <a href="#sports">Sports</a>
-    <a href="#puzzles">Tic Tac Toe</a>
-    <a href="#math">Math</a>
-    <a href="#languages">Languages</a>
-  </nav>
+<div class="navbar">
+    <h1>NEONIX HUB</h1>
+    <a href="#">Home</a>
+</div>
 
-  <section id="driving" class="games-container">
-    <div class="game-card">
-     
-      <div class="info">
-        <h3>Arcade Racer</h3>
-        <button onclick="location.href='arcade-racer.html'">Play</button>
-      </div>
-    </div>
-    <!-- you can add more driving cards here -->
-  </section>
+<div class="hero">
+    <h2>NEONIX HUB</h2>
+    <p>Elite Roblox Executor Script Hub</p>
+</div>
 
-  <section id="sports" class="games-container">
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Football Stars</h3>
-        <button onclick="location.href='football.html'">Play</button>
-      </div>
-    </div>
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Basketball Dunk</h3>
-        <button onclick="location.href='basketball.html'">Play</button>
-      </div>
-    </div>
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Bowling Strike</h3>
-        <button onclick="location.href='bowling.html'">Play</button>
-      </div>
-    </div>
-  </section>
+<div class="info" id="executorInfo">Detecting executor...</div>
 
-  <section id="puzzles" class="games-container">
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Tic Tac Toe</h3>
-        <button onclick="location.href='tictactoe.html'">Play</button>
-      </div>
-    </div>
-  </section>
+<!-- KEY -->
+<div class="key-box" id="keyBox">
+    <input id="keyInput" placeholder="NEONIX-XXXX">
+    <button onclick="checkKey()">Unlock Scripts</button>
+</div>
 
-  <section id="math" class="games-container">
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Math Challenge</h3>
-        <button onclick="location.href='math-game.html'">Play</button>
-      </div>
-    </div>
-  </section>
+<!-- SEARCH -->
+<div class="search" id="searchBox">
+    <input placeholder="Search scripts..." onkeyup="searchScripts(this.value)">
+</div>
 
-  <section id="languages" class="games-container">
-    <div class="game-card">
-      
-      <div class="info">
-        <h3>Learn a Language</h3>
-        <button onclick="location.href='language-learn.html'">Start</button>
-      </div>
-    </div>
-  </section>
+<!-- CATEGORIES -->
+<div class="categories" id="categories">
+    <button class="cat-btn" onclick="filterCat('all')">All</button>
+    <button class="cat-btn" onclick="filterCat('SOON1')">SOON1</button>
+    <button class="cat-btn" onclick="filterCat('SOON2')">SOON2</button>
+    <button class="cat-btn" onclick="filterCat('SOON3')">SOON3</button>
+</div>
 
-  <footer>
-    Made by: Nard Morina, Engjëll Musa, Lis Beqiri, Rubin Osmani, Aneta Dubova and Diell Sinanaj
-  </footer>
+<!-- SCRIPTS -->
+<div class="scripts" id="scripts">
+
+    <div class="script-card SOON1">
+        <h4>SOON</h4>
+        <p>SOON</p>
+        <pre id="s1">SOON1</pre>
+        <button onclick="copy('s1')">Copy</button>
+    </div>
+
+    <div class="script-card SOON2">
+        <h4>SOON</h4>
+        <p>SOON</p>
+        <pre id="s2">SOON2</pre>
+        <button onclick="copy('s2')">Copy</button>
+    </div>
+
+    <div class="script-card SOON3">
+        <h4>SOON</h4>
+        <p>SOON</p>
+        <pre id="s3">SOON3</pre>
+        <button onclick="copy('s3')">Copy</button>
+    </div>
+
+</div>
+
+<button class="discord" onclick="window.open('https://discord.gg/h8UsUgXVNJ')">
+💬 Join our Discord Server
+</button>
+
+<script>
+/* EXECUTOR DETECTION */
+let exec = "You can Find our Executor on Delta";
+if (navigator.userAgent.includes("Electron")) exec = "Synapse / Electron";
+if (navigator.userAgent.includes("Krnl")) exec = "KRNL";
+if (navigator.userAgent.includes("Fluxus")) exec = "Fluxus";
+document.getElementById("executorInfo").innerText = "Executor: " + exec;
+
+/* KEY SYSTEM */
+const KEY = "neonix123";
+if (localStorage.neonix === "ok") unlock();
+
+function checkKey(){
+    if(keyInput.value === KEY){
+        localStorage.neonix = "ok";
+        unlock();
+        alert("✅ Access granted");
+    } else alert("❌ Invalid key");
+}
+
+function unlock(){
+    keyBox.style.display="none";
+    categories.style.display="flex";
+    scripts.style.display="block";
+    searchBox.style.display="block";
+}
+
+/* FILTER */
+function filterCat(cat){
+    document.querySelectorAll(".script-card").forEach(c=>{
+        c.style.display = (cat==="all"||c.classList.contains(cat))?"block":"none";
+    });
+}
+
+/* SEARCH */
+function searchScripts(q){
+    q=q.toLowerCase();
+    document.querySelectorAll(".script-card").forEach(c=>{
+        c.style.display = c.innerText.toLowerCase().includes(q)?"block":"none";
+    });
+}
+
+/* COPY */
+function copy(id){
+    navigator.clipboard.writeText(document.getElementById(id).innerText);
+    alert("📋 Script copied");
+}
+</script>
+
 </body>
 </html>
